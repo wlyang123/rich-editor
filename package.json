@@ -1,0 +1,23 @@
+{
+  "name": "rich-editor",
+  "version": "1.0.0",
+  "description": "Reusable WYSIWYG rich text editor with bold, underline, highlight, colors, alignment, image resize, and local draft support",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": ["rich-text", "editor", "wysiwyg", "react", "contenteditable"],
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "typescript": "^5"
+  }
+}

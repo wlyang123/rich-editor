@@ -1,0 +1,156 @@
+/* ── Rich Editor Styles ── */
+/* All styles use CSS custom properties. Override these to match your theme. */
+
+.re-container {
+  /* Theme tokens */
+  --re-bg: #ffffff;
+  --re-card-bg: #f9fafb;
+  --re-border: #e5e7eb;
+  --re-text: #1f2937;
+  --re-muted: #9ca3af;
+  --re-accent: #3b82f6;
+  --re-radius: 0.5rem;
+  --re-font-size: 0.875rem;
+
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--re-text);
+}
+
+/* ── Toolbar ── */
+.re-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border: 1px solid var(--re-border);
+  border-radius: var(--re-radius);
+  background: var(--re-card-bg);
+  margin-bottom: 6px;
+}
+.re-btn {
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: var(--re-text);
+  cursor: pointer;
+  line-height: 1.5;
+}
+.re-btn:hover { background: rgba(59, 130, 246, 0.1); }
+.re-btn:disabled { opacity: 0.5; cursor: default; }
+.re-btn-bold { font-weight: 700; }
+.re-btn-underline { text-decoration: underline; }
+.re-sep {
+  width: 1px;
+  height: 16px;
+  background: var(--re-border);
+  margin: 0 4px;
+}
+.re-color-btn {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--re-border);
+  cursor: pointer;
+  font-size: 7px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.re-color-btn:hover { box-shadow: 0 0 0 2px var(--re-accent); }
+.re-hl-btn {
+  width: 18px; height: 18px;
+  border-radius: 3px;
+  border: 1px solid var(--re-border);
+  cursor: pointer;
+  padding: 0;
+}
+.re-hl-btn:hover { box-shadow: 0 0 0 2px var(--re-accent); }
+.re-hl-clear {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: var(--re-muted);
+}
+
+/* ── Editor Area ── */
+.re-editor {
+  width: 100%;
+  border: 1px solid var(--re-border);
+  border-radius: var(--re-radius);
+  background: var(--re-bg);
+  padding: 10px 14px;
+  font-size: var(--re-font-size);
+  line-height: 1.6;
+  color: var(--re-text);
+  outline: none;
+  overflow-y: auto;
+}
+.re-editor:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+.re-editor:empty::before {
+  content: attr(data-placeholder);
+  color: var(--re-muted);
+  opacity: 0.6;
+}
+
+/* ── Image Wrapper (proportional resize + alignment) ── */
+.img-resize-wrap {
+  display: inline-block;
+  resize: horizontal;
+  overflow: hidden;
+  max-width: 100%;
+  min-width: 40px;
+  min-height: 20px;
+  vertical-align: bottom;
+  border-radius: 6px;
+  border: 1px solid var(--re-border);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.04);
+  margin: 4px 0;
+}
+.img-resize-wrap img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  pointer-events: none;
+}
+.img-resize-wrap.selected {
+  outline: 2px solid var(--re-accent);
+  outline-offset: 2px;
+}
+
+/* Display mode (no resize handle) */
+.re-content .img-resize-wrap {
+  resize: none;
+}
+
+/* ── Content display ── */
+.re-content p { margin: 0.5em 0; }
+.re-content h1 { font-size: 1.5em; font-weight: 700; margin: 1em 0 0.5em; }
+.re-content h2 { font-size: 1.25em; font-weight: 700; margin: 0.8em 0 0.4em; }
+.re-content h3 { font-size: 1.1em; font-weight: 600; margin: 0.6em 0 0.3em; }
+.re-content b, .re-content strong { font-weight: 700; }
+.re-content u { text-decoration: underline; }
+.re-content blockquote { border-left: 3px solid var(--re-accent); padding-left: 1em; margin: 0.5em 0; opacity: 0.8; font-style: italic; }
+.re-content code { background: var(--re-card-bg); padding: 0.15em 0.4em; border-radius: 0.25em; font-size: 0.85em; font-family: monospace; }
+.re-content ul, .re-content ol { padding-left: 1.5em; margin: 0.5em 0; }
+.re-content div:not(:last-child) { margin-bottom: 0.25em; }
+
+/* ── Dark mode ── */
+@media (prefers-color-scheme: dark) {
+  .re-container {
+    --re-bg: #1e1e2e;
+    --re-card-bg: #2a2a3c;
+    --re-border: #3a3a50;
+    --re-text: #e5e5e5;
+    --re-muted: #888;
+    --re-accent: #60a5fa;
+  }
+}
