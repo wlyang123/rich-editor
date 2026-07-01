@@ -1,16 +1,16 @@
 # Rich Editor
 
-Reusable WYSIWYG rich text editor for React. Supports bold, underline, font colors, highlights, text alignment, image resize (proportional), and localStorage draft auto-save.
+可复用的 WYSIWYG 富文本编辑器 React 组件。支持加粗、下划线、字体颜色、高亮、文字对齐、图片等比缩放、localStorage 实时暂存。
 
-## Install
+## 安装
 
 ```bash
 npm install github:wlyang123/rich-editor
 ```
 
-Or copy `src/` into your project.
+也可以直接复制 `src/` 目录到项目中使用。
 
-## Usage
+## 快速上手
 
 ```tsx
 import { RichEditor, RichEditorHandle } from 'rich-editor';
@@ -29,58 +29,57 @@ function MyEditor() {
     <div>
       <RichEditor
         ref={editorRef}
-        placeholder="Write something..."
+        placeholder="写点什么..."
         minHeight="200px"
         onChange={html => console.log('changed')}
         onCmdEnter={handleSave}
         onImageUpload={async (file) => {
-          // Upload file to your server/storage
-          const formData = new FormData();
-          formData.append('file', file);
-          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+          const fd = new FormData();
+          fd.append('file', file);
+          const res = await fetch('/api/upload', { method: 'POST', body: fd });
           const { url } = await res.json();
           return url;
         }}
         draftKey="my-blog-draft"
       />
-      <button onClick={handleSave}>Save</button>
+      <button onClick={handleSave}>保存</button>
     </div>
   );
 }
 ```
 
-## Props
+## Props 参数
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `initialContent` | `string` | `''` | Initial HTML content |
-| `placeholder` | `string` | `'Write something...'` | Placeholder when empty |
-| `minHeight` | `string` | `'120px'` | Min editor height |
-| `onChange` | `(html: string) => void` | — | Called on every content change |
-| `onCmdEnter` | `() => void` | — | Called on Cmd+Enter/Ctrl+Enter |
-| `onImageUpload` | `(file: File) => Promise<string>` | — | Image upload handler. If not provided, image button hidden |
-| `maxImageSize` | `number` | `4718592` | Max image size in bytes (default 4.5MB) |
-| `showImage` | `boolean` | `true` | Show image upload button |
-| `draftKey` | `string` | — | LocalStorage key for auto-save (empty = disabled) |
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `initialContent` | `string` | `''` | 初始 HTML 内容 |
+| `placeholder` | `string` | `'写点什么...'` | 空白时提示文字 |
+| `minHeight` | `string` | `'120px'` | 编辑器最小高度 |
+| `onChange` | `(html: string) => void` | — | 每次编辑时回调 |
+| `onCmdEnter` | `() => void` | — | ⌘+Enter 快捷键回调 |
+| `onImageUpload` | `(file: File) => Promise<string>` | — | 图片上传回调，返回图片 URL。不传则隐藏图片按钮 |
+| `maxImageSize` | `number` | `4718592` | 图片最大字节数（默认 4.5MB） |
+| `showImage` | `boolean` | `true` | 是否显示图片上传按钮 |
+| `draftKey` | `string` | — | localStorage 暂存 key（不传则禁用） |
 
-## Ref Methods
+## Ref 方法
 
-| Method | Description |
-|--------|-------------|
-| `getContent()` | Returns current HTML content |
-| `clear()` | Clears all content |
+| 方法 | 说明 |
+|------|------|
+| `getContent()` | 获取当前 HTML 内容 |
+| `clear()` | 清空编辑器 |
 
-## Features
+## 功能列表
 
-- **Text formatting**: Bold (⌘B), Underline (⌘U)
-- **Font colors**: 5 preset colors
-- **Highlights**: 5 preset highlight colors + clear
-- **Alignment**: Left / Center / Right
-- **Images**: Upload → insert with resize wrapper (proportional CSS resize) + left/center/right alignment + click to select + Backspace to delete
-- **Draft auto-save**: localStorage every 2 seconds, auto-restore on mount
-- **Paste**: Strips formatting, pastes plain text. Pastes images as uploads
-- **Drag & drop**: Drag images into editor
-- **Theming**: All colors via CSS custom properties, dark mode support via `prefers-color-scheme`
+- **文字格式**：加粗（⌘B）、下划线（⌘U）
+- **字体颜色**：5 种预设颜色
+- **高亮**：5 种高亮色 + 清除按钮
+- **文字对齐**：左对齐、居中、右对齐
+- **图片**：上传 → 等比缩放手柄 + 左中右对齐 + 点击选中 + Backspace 删除
+- **实时暂存**：每隔 2 秒存 localStorage，重新打开自动恢复
+- **粘贴**：自动去格式、粘贴纯文本。图片粘贴自动上传
+- **拖拽**：拖图片到编辑器自动上传
+- **主题**：CSS 自定义属性控制，支持深色模式
 
 ## License
 

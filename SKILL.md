@@ -1,13 +1,6 @@
----
-name: rich-editor
-description: WYSIWYG rich text editor — bold, underline, highlight, colors, alignment, image resize, local draft
-metadata:
-  type: skill
----
+# Rich Editor
 
-# Rich Editor Skill
-
-可复用的 WYSIWYG 富文本编辑器 React 组件。当用户需要带格式的文本输入（加粗、下划线、高亮、颜色、对齐、图片）时使用此 skill。
+可复用的 WYSIWYG 富文本编辑器 React 组件。支持加粗、下划线、字体颜色、高亮、文字对齐、图片等比缩放、localStorage 实时暂存。
 
 ## 安装
 
@@ -15,29 +8,44 @@ metadata:
 npm install github:wlyang123/rich-editor
 ```
 
+也可以直接复制 `src/` 目录到项目中使用。
+
 ## 快速上手
 
 ```tsx
 import { RichEditor, RichEditorHandle } from 'rich-editor';
-import 'rich-editor/dist/styles.css';
+import 'rich-editor/styles.css';
 import { useRef } from 'react';
 
-const editorRef = useRef<RichEditorHandle>(null);
+function MyEditor() {
+  const editorRef = useRef<RichEditorHandle>(null);
 
-<RichEditor
-  ref={editorRef}
-  placeholder="写点什么..."
-  minHeight="200px"
-  onChange={(html) => console.log(html)}
-  onCmdEnter={() => save()}
-  onImageUpload={async (file) => {
-    const fd = new FormData(); fd.append('file', file);
-    const res = await fetch('/api/upload', { method: 'POST', body: fd });
-    const { url } = await res.json();
-    return url;
-  }}
-  draftKey="my-draft"
-/>
+  const handleSave = () => {
+    const html = editorRef.current?.getContent();
+    console.log(html);
+  };
+
+  return (
+    <div>
+      <RichEditor
+        ref={editorRef}
+        placeholder="写点什么..."
+        minHeight="200px"
+        onChange={html => console.log('changed')}
+        onCmdEnter={handleSave}
+        onImageUpload={async (file) => {
+          const fd = new FormData();
+          fd.append('file', file);
+          const res = await fetch('/api/upload', { method: 'POST', body: fd });
+          const { url } = await res.json();
+          return url;
+        }}
+        draftKey="my-blog-draft"
+      />
+      <button onClick={handleSave}>保存</button>
+    </div>
+  );
+}
 ```
 
 ## Props 参数
@@ -56,62 +64,23 @@ const editorRef = useRef<RichEditorHandle>(null);
 
 ## Ref 方法
 
-```tsx
-const editorRef = useRef<RichEditorHandle>(null);
-editorRef.current?.getContent();  // 获取当前 HTML 内容
-editorRef.current?.clear();       // 清空编辑器
-```
+| 方法 | 说明 |
+|------|------|
+| `getContent()` | 获取当前 HTML 内容 |
+| `clear()` | 清空编辑器 |
 
-## 核心功能
+## 功能列表
 
-1. **文字格式**：加粗（⌘B）、下划线（⌘U）
-2. **字体颜色**：5 种预设颜色（黑、红、蓝、绿、橙）
-3. **高亮**：5 种高亮色（黄、蓝、红、紫、橙）+ 清除按钮
-4. **文字对齐**：左对齐、居中、右对齐
-5. **图片**（需传 onImageUpload）：
-   - 工具栏按钮上传 / 粘贴上传 / 拖拽上传
-   - 等比缩放（CSS resize horizontal 手柄）
-   - 左中右对齐（选中图片后点对齐按钮）
-   - 点击选中（蓝色选中框），Backspace/Delete 删除
-6. **粘贴**：自动去除格式，粘贴纯文本。图片粘贴自动上传
-7. **暂存**：每隔 2 秒自动存到 localStorage，重新打开自动恢复。手动保存后清除
-8. **主题**：所有颜色通过 CSS 自定义属性控制。支持深色模式（prefers-color-scheme）
+- **文字格式**：加粗（⌘B）、下划线（⌘U）
+- **字体颜色**：5 种预设颜色
+- **高亮**：5 种高亮色 + 清除按钮
+- **文字对齐**：左对齐、居中、右对齐
+- **图片**：上传 → 等比缩放手柄 + 左中右对齐 + 点击选中 + Backspace 删除
+- **实时暂存**：每隔 2 秒存 localStorage，重新打开自动恢复
+- **粘贴**：自动去格式、粘贴纯文本。图片粘贴自动上传
+- **拖拽**：拖图片到编辑器自动上传
+- **主题**：CSS 自定义属性控制，支持深色模式
 
-## 图片上传对接
+## License
 
-对接 Vercel Blob：
-
-```typescript
-onImageUpload={async (file) => {
-  const fd = new FormData();
-  fd.append('file', file);
-  const res = await fetch('/api/upload', { method: 'POST', body: fd });
-  const { url } = await res.json();
-  return url;
-}}
-```
-
-对接 Supabase Storage：
-
-```typescript
-onImageUpload={async (file) => {
-  const name = `${Date.now()}_${file.name}`;
-  const { data } = await supabase.storage.from('images').upload(name, file);
-  return supabase.storage.from('images').getPublicUrl(data.path).data.publicUrl;
-}}
-```
-
-## 展示模式
-
-保存后展示内容时用 `.re-content` 类名获得正确的排版：
-
-```tsx
-<div className="re-content" dangerouslySetInnerHTML={{ __html: post.content }} />
-```
-
-## 注意事项
-
-- 不依赖 Tailwind，纯 CSS 自定义属性
-- 不依赖 Next.js，任何 React 框架或原生 React 项目都能用
-- 不依赖数据库，所有状态走回调或 localStorage
-- CSS 文件需要单独引入：`import 'rich-editor/dist/styles.css'`
+MIT
